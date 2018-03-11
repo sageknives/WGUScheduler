@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.sagegatzke.wguscheduler.CourseInfo"
+    tools:showIn="@layout/activity_course_info">
+    <TextView
+        android:id="@+id/termTitleLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/termTitle"
+        android:text="Term title"
+        />
+    <EditText
+        android:id="@+id/termTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_title_here"
+        android:layout_below="@+id/termTitleLabel"
+        android:inputType="textShortMessage|textCapSentences"
+        />
+    <TextView
+        android:id="@+id/courseTitleLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/courseTitle"
+        android:layout_below="@+id/termTitle"
+        android:text="Course title"
+        />
+    <EditText
+        android:id="@+id/courseTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_title_here"
+        android:layout_below="@+id/courseTitleLabel"
+        android:inputType="textShortMessage|textCapSentences"
+        />
+    <TextView
+        android:id="@+id/courseStartLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/courseTitle"
+        android:labelFor="@+id/courseStart"
+        android:text="course Start"
+        />
+    <EditText
+        android:id="@+id/courseStart"
+        android:layout_width="fill_parent"
+        android:layout_height="46dp"
+        android:layout_below="@+id/courseStartLabel"
+        android:hint="@string/enter_start_here"
+        android:inputType="textShortMessage"
+        android:focusable="false"
+        />
+    <TextView
+        android:id="@+id/courseEndLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/courseEnd"
+        android:layout_below="@+id/courseStart"
+        android:text="Course End"
+        />
+
+    <EditText
+        android:id="@+id/courseEnd"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_below="@+id/courseEndLabel"
+        android:hint="@string/enter_end_here"
+        android:inputType="textShortMessage"
+        android:focusable="false"
+        />
+    <TextView
+        android:id="@+id/courseAssessmentCountLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/courseEnd"
+        android:layout_below="@+id/courseEnd"
+        android:text="Assessment Count"
+        />
+
+    <TextView
+        android:id="@+id/courseAssessmentCount"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_below="@+id/courseAssessmentCountLabel"
+        />
+</RelativeLayout>

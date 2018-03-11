@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.sagegatzke.wguscheduler">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Terms"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".TermsProvider"
+            android:authorities="com.example.sagegatzke.wguscheduler.termsprovider"
+            android:exported="false" />
+        <provider
+            android:name=".CoursesProvider"
+            android:authorities="com.example.sagegatzke.wguscheduler.coursesprovider"
+            android:exported="false" />
+        <provider
+            android:name=".AssessmentsProvider"
+            android:authorities="com.example.sagegatzke.wguscheduler.assessmentsprovider"
+            android:exported="false" />
+
+        <activity
+            android:name=".Term"
+            android:label="@string/title_activity_term"
+            android:parentActivityName=".Terms"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.sagegatzke.wguscheduler.Term" />
+        </activity>
+        <activity
+            android:name=".Course"
+            android:label="@string/title_activity_course"
+            android:parentActivityName=".Term"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.sagegatzke.wguscheduler.Course" />
+        </activity>
+        <activity
+            android:name=".TermInfo"
+            android:label="@string/title_activity_term_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CourseInfo"
+            android:label="@string/title_activity_course_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Assessment"
+            android:label="@string/title_activity_assessment"
+            android:parentActivityName=".Course"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.sagegatzke.wguscheduler.Course" />
+        </activity>
+        <activity
+            android:name=".AssessmentInfo"
+            android:label="@string/title_activity_assessment_info"
+            android:parentActivityName=".Course"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.sagegatzke.wguscheduler.Course" />
+        </activity>
+    </application>
+
+</manifest>

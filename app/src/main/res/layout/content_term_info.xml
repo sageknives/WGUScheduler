@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.sagegatzke.wguscheduler.TermInfo"
+    tools:showIn="@layout/activity_term_info">
+    <TextView
+        android:id="@+id/termTitleLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/termTitle"
+        android:text="Term title"
+        />
+    <EditText
+        android:id="@+id/termTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_title_here"
+        android:layout_below="@+id/termTitleLabel"
+        android:inputType="textShortMessage|textCapSentences"
+        />
+    <TextView
+        android:id="@+id/termStartLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/termTitle"
+        android:labelFor="@+id/termStart"
+        android:text="Term Start"
+        />
+    <EditText
+        android:id="@+id/termStart"
+        android:layout_width="fill_parent"
+        android:layout_height="46dp"
+        android:layout_below="@+id/termStartLabel"
+        android:hint="@string/enter_start_here"
+        android:inputType="textShortMessage"
+        android:focusable="false"
+        />
+    <TextView
+        android:id="@+id/termEndLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/termEnd"
+        android:layout_below="@+id/termStart"
+        android:text="Term End"
+        />
+
+    <EditText
+        android:id="@+id/termEnd"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_below="@+id/termEndLabel"
+        android:hint="@string/enter_end_here"
+        android:inputType="textShortMessage"
+        android:focusable="false"
+        />
+    <TextView
+        android:id="@+id/termCourseCountLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/termEnd"
+        android:layout_below="@+id/termEnd"
+        android:text="Course Count"
+        />
+
+    <TextView
+        android:id="@+id/termCourseCount"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_below="@+id/termCourseCountLabel"
+        />
+
+
+
+
+</RelativeLayout>
