@@ -17,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 
-public class Terms extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class Terms extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int TERM_EDITOR_REQUEST_CODE = 101;
     private CursorAdapter cursorAdapter;
@@ -28,6 +28,8 @@ public class Terms extends AppCompatActivity implements LoaderManager.LoaderCall
         setContentView(R.layout.activity_terms);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         cursorAdapter = new TermsCursorAdapter(this, null, 0);
 
@@ -70,8 +72,9 @@ public class Terms extends AppCompatActivity implements LoaderManager.LoaderCall
         Intent intent = new Intent(this, TermInfo.class);
         //startActivityForResult(intent, EDITOR_REQUEST_CODE);
 
-        startActivityForResult(intent,TERM_EDITOR_REQUEST_CODE);
+        startActivityForResult(intent, TERM_EDITOR_REQUEST_CODE);
     }
+
     public void getInfo(View view) {
 
     }
