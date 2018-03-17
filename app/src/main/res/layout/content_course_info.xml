@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,85 +7,159 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.sagegatzke.wguscheduler.CourseInfo"
     tools:showIn="@layout/activity_course_info">
-    <TextView
-        android:id="@+id/termTitleLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/termTitle"
-        android:text="Term title"
-        />
-    <EditText
-        android:id="@+id/termTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_title_here"
-        android:layout_below="@+id/termTitleLabel"
-        android:inputType="textShortMessage|textCapSentences"
-        />
-    <TextView
-        android:id="@+id/courseTitleLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/courseTitle"
-        android:layout_below="@+id/termTitle"
-        android:text="Course title"
-        />
-    <EditText
-        android:id="@+id/courseTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_title_here"
-        android:layout_below="@+id/courseTitleLabel"
-        android:inputType="textShortMessage|textCapSentences"
-        />
-    <TextView
-        android:id="@+id/courseStartLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/courseTitle"
-        android:labelFor="@+id/courseStart"
-        android:text="course Start"
-        />
-    <EditText
-        android:id="@+id/courseStart"
-        android:layout_width="fill_parent"
-        android:layout_height="46dp"
-        android:layout_below="@+id/courseStartLabel"
-        android:hint="@string/enter_start_here"
-        android:inputType="textShortMessage"
-        android:focusable="false"
-        />
-    <TextView
-        android:id="@+id/courseEndLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/courseEnd"
-        android:layout_below="@+id/courseStart"
-        android:text="Course End"
-        />
 
-    <EditText
-        android:id="@+id/courseEnd"
-        android:layout_width="fill_parent"
-        android:layout_height="43dp"
-        android:layout_below="@+id/courseEndLabel"
-        android:hint="@string/enter_end_here"
-        android:inputType="textShortMessage"
-        android:focusable="false"
-        />
-    <TextView
-        android:id="@+id/courseAssessmentCountLabel"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/courseEnd"
-        android:layout_below="@+id/courseEnd"
-        android:text="Assessment Count"
-        />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/courseAssessmentCount"
-        android:layout_width="fill_parent"
-        android:layout_height="43dp"
-        android:layout_below="@+id/courseAssessmentCountLabel"
-        />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/courseTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/courseTitle"
+            android:text="Course title" />
+
+        <EditText
+            android:id="@+id/courseTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseTitleLabel"
+            android:hint="@string/enter_title_here"
+            android:inputType="textShortMessage|textCapSentences" />
+
+        <TextView
+            android:id="@+id/courseStartLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseTitle"
+            android:labelFor="@+id/courseStart"
+            android:text="course Start" />
+
+        <EditText
+            android:id="@+id/courseStart"
+            android:layout_width="fill_parent"
+            android:layout_height="46dp"
+            android:layout_below="@+id/courseStartLabel"
+            android:focusable="false"
+            android:hint="@string/enter_start_here"
+            android:inputType="textShortMessage" />
+
+        <TextView
+            android:id="@+id/courseEndLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseStart"
+            android:labelFor="@+id/courseEnd"
+            android:text="Course End" />
+
+        <EditText
+            android:id="@+id/courseEnd"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:layout_below="@+id/courseEndLabel"
+            android:focusable="false"
+            android:hint="@string/enter_end_here"
+            android:inputType="textShortMessage" />
+
+        <TextView
+            android:id="@+id/courseStatusLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseEnd"
+            android:labelFor="@+id/courseStatus"
+            android:text="Course Status" />
+
+        <EditText
+            android:id="@+id/courseStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:layout_below="@+id/courseStatusLabel"
+            android:hint="@string/course_status"
+            android:inputType="textShortMessage" />
+
+        <TextView
+            android:id="@+id/courseMentorNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseStatus"
+            android:labelFor="@+id/courseMentorName"
+            android:text="Course Mentor Name" />
+
+        <EditText
+            android:id="@+id/courseMentorName"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:layout_below="@+id/courseMentorNameLabel"
+            android:hint="@string/course_mentor_name"
+            android:inputType="textShortMessage" />
+
+        <TextView
+            android:id="@+id/courseMentorEmailLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseMentorName"
+            android:labelFor="@+id/courseMentorEmail"
+            android:text="Course Mentor Email" />
+
+        <EditText
+            android:id="@+id/courseMentorEmail"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:layout_below="@+id/courseMentorEmailLabel"
+            android:hint="@string/course_mentor_email"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/courseMentorNumberLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseMentorEmail"
+            android:labelFor="@+id/courseMentorNumber"
+            android:text="Course Mentor Number" />
+
+        <EditText
+            android:id="@+id/courseMentorNumber"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:layout_below="@+id/courseMentorNumberLabel"
+            android:hint="@string/course_mentor_number"
+            android:inputType="phone" />
+
+        <TextView
+            android:id="@+id/courseNotesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseMentorNumber"
+            android:labelFor="@+id/courseNotes"
+            android:text="Course Notes" />
+
+        <EditText
+            android:id="@+id/courseNotes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseNotesLabel"
+            android:hint="@string/course_notes"
+            android:inputType="textMultiLine" />
+
+        <TextView
+            android:id="@+id/courseAssessmentCountLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseNotes"
+            android:labelFor="@+id/courseAssessmentCount"
+            android:text="Assessment Count" />
+
+        <TextView
+            android:id="@+id/courseAssessmentCount"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:layout_below="@+id/courseAssessmentCountLabel" />
+
+        <Button
+            android:id="@+id/notification_toggle_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseAssessmentCount"
+            android:text="Enable Notifications" />
+    </RelativeLayout>
+</ScrollView>

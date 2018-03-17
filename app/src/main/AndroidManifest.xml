@@ -54,11 +54,14 @@
         <activity
             android:name=".TermInfo"
             android:label="@string/title_activity_term_info"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".CourseInfo"
             android:label="@string/title_activity_course_info"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Assessment"
             android:label="@string/title_activity_assessment"
@@ -72,7 +75,8 @@
             android:name=".AssessmentInfo"
             android:label="@string/title_activity_assessment_info"
             android:parentActivityName=".Course"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sagegatzke.wguscheduler.Course" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,71 +7,65 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.sagegatzke.wguscheduler.AssessmentInfo"
     tools:showIn="@layout/activity_assessment_info">
-    <TextView
-        android:id="@+id/courseTitleLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/termTitle"
-        android:text="Course title"
-        />
-    <EditText
-        android:id="@+id/courseTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_title_here"
-        android:layout_below="@+id/courseTitleLabel"
-        android:inputType="textShortMessage|textCapSentences"
-        />
-    <TextView
-        android:id="@+id/assessmentTitleLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/courseTitle"
-        android:layout_below="@+id/courseTitle"
-        android:text="Assessment title"
-        />
-    <EditText
-        android:id="@+id/assessmentTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_title_here"
-        android:layout_below="@+id/assessmentTitleLabel"
-        android:inputType="textShortMessage|textCapSentences"
-        />
-    <TextView
-        android:id="@+id/assessmentStartLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/assessmentTitle"
-        android:labelFor="@+id/assessmentStart"
-        android:text="Assessment Start"
-        />
-    <EditText
-        android:id="@+id/assessmentStart"
-        android:layout_width="fill_parent"
-        android:layout_height="46dp"
-        android:layout_below="@+id/assessmentStartLabel"
-        android:hint="@string/enter_start_here"
-        android:inputType="textShortMessage"
-        android:focusable="false"
-        />
-    <TextView
-        android:id="@+id/assessmentEndLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/assessmentEnd"
-        android:layout_below="@+id/assessmentStart"
-        android:text="Assessment End"
-        />
 
-    <EditText
-        android:id="@+id/assessmentEnd"
-        android:layout_width="fill_parent"
-        android:layout_height="43dp"
-        android:layout_below="@+id/assessmentEndLabel"
-        android:hint="@string/enter_end_here"
-        android:inputType="textShortMessage"
-        android:focusable="false"
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/assessmentTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/assessmentTitle"
+            android:text="Assessment title" />
+
+        <EditText
+            android:id="@+id/assessmentTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/assessmentTitleLabel"
+            android:hint="@string/enter_title_here"
+            android:inputType="textShortMessage|textCapSentences" />
+
+        <TextView
+            android:id="@+id/assessmentTypeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/assessmentTitle"
+            android:labelFor="@+id/assessmentType"
+            android:text="Assessment Type" />
+
+        <EditText
+            android:id="@+id/assessmentType"
+            android:layout_width="fill_parent"
+            android:layout_height="46dp"
+            android:layout_below="@+id/assessmentTypeLabel"
+            android:hint="Type 'performance' or 'objective'"
+            android:inputType="textShortMessage" />
+
+        <TextView
+            android:id="@+id/assessmentDueDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/assessmentType"
+            android:labelFor="@+id/assessmentDueDate"
+            android:text="Assessment Due Date" />
+
+        <EditText
+            android:id="@+id/assessmentDueDate"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:layout_below="@+id/assessmentDueDateLabel"
+            android:focusable="false"
+            android:hint="@string/assessment_due_date"
+            android:inputType="textShortMessage" />
+
+        <Button
+            android:id="@+id/notification_toggle_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/assessmentDueDate"
+            android:text="Enable Notifications" />
+
+    </RelativeLayout>
+</ScrollView>

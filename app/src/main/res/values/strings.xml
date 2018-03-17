@@ -21,4 +21,11 @@
     <string name="assessment_delete_snack">Assessment deleted</string>
     <string name="assessment_updated_toast">Assessment updated</string>
     <string name="course_delete_snack">Course deleted</string>
+    <string name="course_status">in progress, completed, dropped, plan to take</string>
+    <string name="course_mentor_name">a mentors name</string>
+    <string name="course_mentor_email">mentor\'s email</string>
+    <string name="course_mentor_number">course mentor\'s number</string>
+    <string name="course_notes">notes...</string>
+    <string name="assessment_created_toast">Assessment created</string>
+    <string name="assessment_due_date">Due Date</string>
 </resources>
