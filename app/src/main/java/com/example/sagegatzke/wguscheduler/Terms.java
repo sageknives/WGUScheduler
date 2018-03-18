@@ -49,28 +49,10 @@ public class Terms extends AppCompatActivity implements LoaderManager.LoaderCall
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_terms, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public void create(View view) {
         Intent intent = new Intent(this, TermInfo.class);
-        //startActivityForResult(intent, EDITOR_REQUEST_CODE);
 
         startActivityForResult(intent, TERM_EDITOR_REQUEST_CODE);
     }
