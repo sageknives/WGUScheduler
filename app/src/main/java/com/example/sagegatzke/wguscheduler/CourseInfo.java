@@ -1,6 +1,8 @@
 package com.example.sagegatzke.wguscheduler;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -137,10 +139,9 @@ public class CourseInfo extends AppCompatActivity {
             courseNotes.setText(savedCourseNotes);
 
             boolean isEnabled = isNotifying();
-            if(isEnabled){
+            if (isEnabled) {
                 notificationButton.setText("Notifications Enabled");
             }
-
 
 
             DBHelper db = new DBHelper(this);
@@ -208,15 +209,78 @@ public class CourseInfo extends AppCompatActivity {
         } else {
             SharedPreferences sharedPref = CourseInfo.this.getPreferences(Context.MODE_PRIVATE);
             boolean notificationsOn = sharedPref.getBoolean("course" + courseId, false);
-            if(notificationsOn){
-                showSnack("Notification already enabled");
-            }else{
+            if (notificationsOn) {
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("course" + courseId, false);
+                editor.commit();
+                notificationButton.setText("Disable Notifications");
+                String title = courseTitle.getText().toString().trim();
+                String start = courseStart.getText().toString().trim();
+                String end = courseEnd.getText().toString().trim();
+                String message = "Cancel notification";
+                cancelNotification(title, message, start, 1);
+                cancelNotification(title, message, end, 2);
+            } else {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("course" + courseId, true);
                 editor.commit();
                 notificationButton.setText("Notifications Enabled");
+                String title = courseTitle.getText().toString().trim();
+                String start = courseStart.getText().toString().trim();
+                String end = courseEnd.getText().toString().trim();
+                String startMessage = "Your course starts today!";
+                String endMessage = "Your course ends today!";
+                enableNotification(title, startMessage, start, 1);
+                enableNotification(title, endMessage, end, 2);
             }
         }
+    }
+
+    private void enableNotification(String title, String message, String datetime, int prefix) {
+
+        Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra("message", message);
+        alarmIntent.putExtra("title", title);
+        Long time = Long.parseLong("0");
+        try {
+            final Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+
+            String[] dateParts = datetime.split("-");
+            if (dateParts.length == 3) {
+                String savedMonth = dateParts[1];
+                String savedDate = dateParts[2];
+                String savedYear = dateParts[0];
+                cal.set(Calendar.YEAR, Integer.parseInt(savedYear));
+                cal.set(Calendar.MONTH, Integer.parseInt(savedMonth) - 1);
+                cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(savedDate));
+                cal.set(Calendar.HOUR_OF_DAY, 9);
+                time = cal.getTime().getTime();
+            } else {
+                showSnack("date is in incorrect format");
+                return;
+            }
+        } catch (Exception e) {
+            Log.d("datetime-error", e.getStackTrace().toString());
+        }
+        int alarmId = Integer.parseInt(prefix + "" + courseId);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) CourseInfo.this.getSystemService(CourseInfo.this.ALARM_SERVICE);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+    }
+
+    private void cancelNotification(String title, String message, String datetime, int prefix) {
+        Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra("message", message);
+        alarmIntent.putExtra("title", title);
+
+        int alarmId = Integer.parseInt(prefix + "" + courseId);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) CourseInfo.this.getSystemService(CourseInfo.this.ALARM_SERVICE);
+
+        alarmManager.cancel(pendingIntent);
     }
 
     private void setDatePicker(final EditText dateView, String currentDate) {

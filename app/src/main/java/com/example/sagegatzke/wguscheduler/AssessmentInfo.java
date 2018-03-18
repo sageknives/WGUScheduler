@@ -140,7 +140,14 @@ public class AssessmentInfo extends AppCompatActivity {
             SharedPreferences sharedPref = AssessmentInfo.this.getPreferences(Context.MODE_PRIVATE);
             boolean notificationsOn = sharedPref.getBoolean("assessment" + assessmentId, false);
             if (notificationsOn) {
-                showSnack("Notification already enabled");
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("assessment" + assessmentId, false);
+                editor.commit();
+                notificationButton.setText("Disable Notifications");
+                String title = assessmentTitle.getText().toString().trim();
+                String dueDate = assessmentDueDate.getText().toString().trim();
+                String message = "Cancel notification";
+                cancelNotification(title, message, dueDate);
             } else {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("assessment" + assessmentId, true);
@@ -154,32 +161,51 @@ public class AssessmentInfo extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("NewApi")
     private void enableNotification(String title, String message, String datetime) {
-        //get title, message, time
 
         Intent alarmIntent = new Intent(this, NotificationReceiver.class);
         alarmIntent.putExtra("message", message);
         alarmIntent.putExtra("title", title);
-//        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-//        datetime = datetime + "T:00:00:00Z";
-//        Long seconds = null;
-//        try {
-//            seconds = parser.parse(datetime).getTime();
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-        //Instant.parse(datetime + "T18:35:00+05:00");
-        Long time = Date.from(Instant.parse(datetime + "T18:35:00+05:00")).getTime();
-//        epochTime = OffsetDateTime.parse(datetime + "T18:35:00+05:00")
-//                .toInstant()
-//                .toEpochMilli();
+        Long time = Long.parseLong("0");
+        try {
+            final Calendar cal = Calendar.getInstance(TimeZone.getDefault());
 
+            String[] dateParts = datetime.split("-");
+            if (dateParts.length == 3) {
+                String savedMonth = dateParts[1];
+                String savedDate = dateParts[2];
+                String savedYear = dateParts[0];
+                cal.set(Calendar.YEAR, Integer.parseInt(savedYear));
+                cal.set(Calendar.MONTH, Integer.parseInt(savedMonth) - 1);
+                cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(savedDate));
+                cal.set(Calendar.HOUR_OF_DAY, 9);
+                time = cal.getTime().getTime();
+            } else {
+                showSnack("date is in incorrect format");
+                return;
+            }
+        } catch (Exception e) {
+            Log.d("datetime-error", e.getStackTrace().toString());
+        }
+        int alarmId = Integer.parseInt("3" + assessmentId);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) AssessmentInfo.this.getSystemService(AssessmentInfo.this.ALARM_SERVICE);
 
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME, time, pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+    }
+
+    private void cancelNotification(String title, String message, String datetime) {
+        Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra("message", message);
+        alarmIntent.putExtra("title", title);
+
+        int alarmId = Integer.parseInt("3" + assessmentId);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) AssessmentInfo.this.getSystemService(AssessmentInfo.this.ALARM_SERVICE);
+
+        alarmManager.cancel(pendingIntent);
     }
 
 
