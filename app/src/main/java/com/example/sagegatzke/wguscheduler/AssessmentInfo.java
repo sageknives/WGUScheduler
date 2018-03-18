@@ -1,16 +1,21 @@
 package com.example.sagegatzke.wguscheduler;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,12 +29,17 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.Locale;
 
 public class AssessmentInfo extends AppCompatActivity {
 
     private String action;
     private int courseId;
+    private int assessmentId = -1;
     private EditText assessmentTitle;
     private EditText assessmentType;
     private EditText assessmentDueDate;
@@ -73,13 +83,15 @@ public class AssessmentInfo extends AppCompatActivity {
             uri = intent.getParcelableExtra(AssessmentsProvider.ASSESSMENT_CONTENT_ITEM_TYPE);
 
             action = Intent.ACTION_EDIT;
-            assessmentFilter = DBHelper.ASSESSMENT_ID + "=" + uri.getLastPathSegment();
+            assessmentId = Integer.parseInt(uri.getLastPathSegment());
+            assessmentFilter = DBHelper.ASSESSMENT_ID + "=" + assessmentId;
 
             Cursor cursor = getContentResolver().query(uri,
                     DBHelper.ALL_ASSESSMENTS_COLUMNS, assessmentFilter, null, null);
             cursor.moveToFirst();
 
             courseId = cursor.getInt(cursor.getColumnIndex(DBHelper.ASSESSMENT_COURSE_ID));
+
 
             String savedTitle = cursor.getString(cursor.getColumnIndex(DBHelper.ASSESSMENT_TITLE));
             assessmentTitle.setText(savedTitle);
@@ -93,8 +105,8 @@ public class AssessmentInfo extends AppCompatActivity {
             setDatePicker(assessmentDueDate, savedDueDate);
 
             boolean isEnabled = isNotifying();
-            if(isEnabled){
-                notificationButton.setText("Disable notifications");
+            if (isEnabled) {
+                notificationButton.setText("Notifications Enabled");
             }
 
         }
@@ -109,35 +121,67 @@ public class AssessmentInfo extends AppCompatActivity {
     }
 
     private boolean isNotifying() {
-        if (courseId == -1) {
+        if (assessmentId == -1) {
             return false;
 
         } else {
             SharedPreferences sharedPref = AssessmentInfo.this.getPreferences(Context.MODE_PRIVATE);
-            boolean notificationsOn = sharedPref.getBoolean("course" + courseId, false);
+            boolean notificationsOn = sharedPref.getBoolean("assessment" + assessmentId, false);
             return notificationsOn;
         }
 
     }
 
+
     private void toggleNotifications() {
-        if (courseId == -1) {
+        if (assessmentId == -1) {
             showSnack("You must add the assessment before you can be notified.");
         } else {
             SharedPreferences sharedPref = AssessmentInfo.this.getPreferences(Context.MODE_PRIVATE);
-            boolean notificationsOn = sharedPref.getBoolean("course" + courseId, false);
-            notificationsOn = !notificationsOn;
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("course" + courseId, notificationsOn);
-            editor.commit();
+            boolean notificationsOn = sharedPref.getBoolean("assessment" + assessmentId, false);
             if (notificationsOn) {
-                notificationButton.setText("Disable Notifications");
+                showSnack("Notification already enabled");
             } else {
-                notificationButton.setText("Enable Notifications");
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("assessment" + assessmentId, true);
+                editor.commit();
+                notificationButton.setText("Notifications Enabled");
+                String title = assessmentTitle.getText().toString().trim();
+                String dueDate = assessmentDueDate.getText().toString().trim();
+                String message = "Your assessment is due!";
+                enableNotification(title, message, dueDate);
             }
-
         }
     }
+
+    @SuppressLint("NewApi")
+    private void enableNotification(String title, String message, String datetime) {
+        //get title, message, time
+
+        Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra("message", message);
+        alarmIntent.putExtra("title", title);
+//        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+//        datetime = datetime + "T:00:00:00Z";
+//        Long seconds = null;
+//        try {
+//            seconds = parser.parse(datetime).getTime();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        //Instant.parse(datetime + "T18:35:00+05:00");
+        Long time = Date.from(Instant.parse(datetime + "T18:35:00+05:00")).getTime();
+//        epochTime = OffsetDateTime.parse(datetime + "T18:35:00+05:00")
+//                .toInstant()
+//                .toEpochMilli();
+
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) AssessmentInfo.this.getSystemService(AssessmentInfo.this.ALARM_SERVICE);
+
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME, time, pendingIntent);
+    }
+
 
     private void updateAssessment(String title, String type, String dueDate) {
         ContentValues values = new ContentValues();

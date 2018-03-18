@@ -138,7 +138,7 @@ public class CourseInfo extends AppCompatActivity {
 
             boolean isEnabled = isNotifying();
             if(isEnabled){
-                notificationButton.setText("Disable notifications");
+                notificationButton.setText("Notifications Enabled");
             }
 
 
@@ -204,20 +204,18 @@ public class CourseInfo extends AppCompatActivity {
 
     private void toggleNotifications() {
         if (courseId == -1) {
-            showSnack("You must add the course before you can be notified.");
+            showSnack("You must add the assessment before you can be notified.");
         } else {
             SharedPreferences sharedPref = CourseInfo.this.getPreferences(Context.MODE_PRIVATE);
             boolean notificationsOn = sharedPref.getBoolean("course" + courseId, false);
-            notificationsOn = !notificationsOn;
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("course" + courseId, notificationsOn);
-            editor.commit();
             if(notificationsOn){
-                notificationButton.setText("Disable Notifications");
+                showSnack("Notification already enabled");
             }else{
-                notificationButton.setText("Enable Notifications");
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("course" + courseId, true);
+                editor.commit();
+                notificationButton.setText("Notifications Enabled");
             }
-
         }
     }
 
