@@ -28,64 +28,48 @@ public class NotificationReceiver extends BroadcastReceiver {
         int alarmId = intent.getIntExtra("alarmId", 0);
         int id = intent.getIntExtra("id", 0);
         String type = intent.getStringExtra("type");
+
         removeFlag(id, type, context);
+
         Intent notIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, alarmId, notIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
-//        NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
-//        style.bigText(message);
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context.getApplicationContext(), "scheduler_1");
-//                        .setContentIntent(contentIntent)
-//                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                        .setContentTitle(title)
-//                        .setContentText(message)
-//                        .setStyle(style)
-//                        .setWhen(0)
-//                        .setAutoCancel(true);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "scheduler_1");
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
         bigText.bigText(message);
         bigText.setBigContentTitle(title);
         bigText.setSummaryText("summary");
 
-        mBuilder.setContentIntent(contentIntent);
-        //mBuilder.setSmallIcon(R.mipmap.ic_notify);
-        mBuilder.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
-        mBuilder.setSmallIcon(R.mipmap.ic_notify_foreground);
-        mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_notify));
+        builder.setContentIntent(contentIntent);
+        builder.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
+        builder.setSmallIcon(R.mipmap.ic_notify_foreground);
+        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_notify));
 
-        mBuilder.setContentTitle(title);
-        mBuilder.setContentText(message);
-        mBuilder.setPriority(Notification.PRIORITY_MAX);
-        mBuilder.setStyle(bigText);
+        builder.setContentTitle(title);
+        builder.setContentText(message);
+        builder.setPriority(Notification.PRIORITY_MAX);
+        builder.setStyle(bigText);
 
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("scheduler_1",
-                    "Alarms",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel("scheduler_1","Alarms", NotificationManager.IMPORTANCE_DEFAULT);
             Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             AudioAttributes att = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build();
             channel.setSound(uri,att);
-
-            mNotificationManager.createNotificationChannel(channel);
+            manager.createNotificationChannel(channel);
         }
 
-        mNotificationManager.notify(alarmId, mBuilder.build());
+        manager.notify(alarmId, builder.build());
     }
 
     private void removeFlag(int id, String type, Context context) {
         if(type.equals("course")) return;
         String name = type + id;
         SharedPreferences sharedPref = context.getSharedPreferences("NotificationPref", Context.MODE_PRIVATE);
-        boolean notificationsOn = sharedPref.getBoolean(name, false);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(name, false);
         editor.commit();
