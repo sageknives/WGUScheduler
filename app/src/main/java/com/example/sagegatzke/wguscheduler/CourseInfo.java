@@ -196,7 +196,7 @@ public class CourseInfo extends AppCompatActivity {
             return false;
 
         } else {
-            SharedPreferences sharedPref = CourseInfo.this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = CourseInfo.this.getSharedPreferences("NotificationPref", Context.MODE_PRIVATE);
             boolean notificationsOn = sharedPref.getBoolean("course" + courseId, false);
             return notificationsOn;
         }
@@ -207,7 +207,7 @@ public class CourseInfo extends AppCompatActivity {
         if (courseId == -1) {
             showSnack("You must add the assessment before you can be notified.");
         } else {
-            SharedPreferences sharedPref = CourseInfo.this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = CourseInfo.this.getSharedPreferences("NotificationPref", Context.MODE_PRIVATE);
             boolean notificationsOn = sharedPref.getBoolean("course" + courseId, false);
             if (notificationsOn) {
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -218,8 +218,8 @@ public class CourseInfo extends AppCompatActivity {
                 String start = courseStart.getText().toString().trim();
                 String end = courseEnd.getText().toString().trim();
                 String message = "Cancel notification";
-                cancelNotification(title, message, start, 1);
-                cancelNotification(title, message, end, 2);
+                cancelNotification(courseId, title, message, start, 1);
+                cancelNotification(courseId, title, message, end, 2);
             } else {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("course" + courseId, true);
@@ -230,15 +230,17 @@ public class CourseInfo extends AppCompatActivity {
                 String end = courseEnd.getText().toString().trim();
                 String startMessage = "Your course starts today!";
                 String endMessage = "Your course ends today!";
-                enableNotification(title, startMessage, start, 1);
-                enableNotification(title, endMessage, end, 2);
+                enableNotification(courseId, title, startMessage, start, 1);
+                enableNotification(courseId, title, endMessage, end, 2);
             }
         }
     }
 
-    private void enableNotification(String title, String message, String datetime, int prefix) {
+    private void enableNotification(int id, String title, String message, String datetime, int prefix) {
 
         Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra("id",id);
+        alarmIntent.putExtra("type","course");
         alarmIntent.putExtra("message", message);
         alarmIntent.putExtra("title", title);
         Long time = Long.parseLong("0");
@@ -263,6 +265,7 @@ public class CourseInfo extends AppCompatActivity {
             Log.d("datetime-error", e.getStackTrace().toString());
         }
         int alarmId = Integer.parseInt(prefix + "" + courseId);
+        alarmIntent.putExtra("alarmId", alarmId);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) CourseInfo.this.getSystemService(CourseInfo.this.ALARM_SERVICE);
@@ -270,12 +273,15 @@ public class CourseInfo extends AppCompatActivity {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
-    private void cancelNotification(String title, String message, String datetime, int prefix) {
+    private void cancelNotification(int id, String title, String message, String datetime, int prefix) {
         Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra("id",id);
+        alarmIntent.putExtra("type","course");
         alarmIntent.putExtra("message", message);
         alarmIntent.putExtra("title", title);
 
         int alarmId = Integer.parseInt(prefix + "" + courseId);
+        alarmIntent.putExtra("alarmId", alarmId);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) CourseInfo.this.getSystemService(CourseInfo.this.ALARM_SERVICE);

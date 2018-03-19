@@ -125,7 +125,7 @@ public class AssessmentInfo extends AppCompatActivity {
             return false;
 
         } else {
-            SharedPreferences sharedPref = AssessmentInfo.this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = AssessmentInfo.this.getSharedPreferences("NotificationPref", Context.MODE_PRIVATE);
             boolean notificationsOn = sharedPref.getBoolean("assessment" + assessmentId, false);
             return notificationsOn;
         }
@@ -137,7 +137,7 @@ public class AssessmentInfo extends AppCompatActivity {
         if (assessmentId == -1) {
             showSnack("You must add the assessment before you can be notified.");
         } else {
-            SharedPreferences sharedPref = AssessmentInfo.this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = AssessmentInfo.this.getSharedPreferences("NotificationPref", Context.MODE_PRIVATE);
             boolean notificationsOn = sharedPref.getBoolean("assessment" + assessmentId, false);
             if (notificationsOn) {
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -147,7 +147,7 @@ public class AssessmentInfo extends AppCompatActivity {
                 String title = assessmentTitle.getText().toString().trim();
                 String dueDate = assessmentDueDate.getText().toString().trim();
                 String message = "Cancel notification";
-                cancelNotification(title, message, dueDate);
+                cancelNotification(assessmentId, title, message, dueDate);
             } else {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("assessment" + assessmentId, true);
@@ -156,14 +156,16 @@ public class AssessmentInfo extends AppCompatActivity {
                 String title = assessmentTitle.getText().toString().trim();
                 String dueDate = assessmentDueDate.getText().toString().trim();
                 String message = "Your assessment is due!";
-                enableNotification(title, message, dueDate);
+                enableNotification(assessmentId, title, message, dueDate);
             }
         }
     }
 
-    private void enableNotification(String title, String message, String datetime) {
+    private void enableNotification(int id, String title, String message, String datetime) {
 
         Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra("id",id);
+        alarmIntent.putExtra("type","assessment");
         alarmIntent.putExtra("message", message);
         alarmIntent.putExtra("title", title);
         Long time = Long.parseLong("0");
@@ -188,6 +190,7 @@ public class AssessmentInfo extends AppCompatActivity {
             Log.d("datetime-error", e.getStackTrace().toString());
         }
         int alarmId = Integer.parseInt("3" + assessmentId);
+        alarmIntent.putExtra("alarmId", alarmId);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) AssessmentInfo.this.getSystemService(AssessmentInfo.this.ALARM_SERVICE);
@@ -195,12 +198,15 @@ public class AssessmentInfo extends AppCompatActivity {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
-    private void cancelNotification(String title, String message, String datetime) {
+    private void cancelNotification(int id, String title, String message, String datetime) {
         Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra("id",id);
+        alarmIntent.putExtra("type","assessment");
         alarmIntent.putExtra("message", message);
         alarmIntent.putExtra("title", title);
 
         int alarmId = Integer.parseInt("3" + assessmentId);
+        alarmIntent.putExtra("alarmId", alarmId);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) AssessmentInfo.this.getSystemService(AssessmentInfo.this.ALARM_SERVICE);
