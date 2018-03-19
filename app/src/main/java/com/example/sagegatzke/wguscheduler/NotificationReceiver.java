@@ -50,28 +50,15 @@ public class NotificationReceiver extends BroadcastReceiver {
         bigText.setSummaryText("summary");
 
         mBuilder.setContentIntent(contentIntent);
-        mBuilder.setSmallIcon(R.drawable.ic_launcher_foreground);
+        //mBuilder.setSmallIcon(R.mipmap.ic_notify);
+        mBuilder.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
+        mBuilder.setSmallIcon(R.mipmap.ic_notify_foreground);
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_notify));
+
         mBuilder.setContentTitle(title);
         mBuilder.setContentText(message);
         mBuilder.setPriority(Notification.PRIORITY_MAX);
         mBuilder.setStyle(bigText);
-        //mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-
-
-
-
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "home")
-//                .setContentIntent(contentIntent)
-//                .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                .setContentTitle(title)
-//                .setContentText(message)
-//                .setSound(S)
-//                .setStyle(style)
-//                .setWhen(0)
-//                .setAutoCancel(true);
-
-//        Notification notification = builder.build();
-//        manager.notify(alarmId, notification);
 
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -95,6 +82,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     }
 
     private void removeFlag(int id, String type, Context context) {
+        if(type.equals("course")) return;
         String name = type + id;
         SharedPreferences sharedPref = context.getSharedPreferences("NotificationPref", Context.MODE_PRIVATE);
         boolean notificationsOn = sharedPref.getBoolean(name, false);

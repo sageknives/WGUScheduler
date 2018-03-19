@@ -15,6 +15,7 @@ import android.icu.util.Calendar;
 import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -140,7 +141,7 @@ public class CourseInfo extends AppCompatActivity {
 
             boolean isEnabled = isNotifying();
             if (isEnabled) {
-                notificationButton.setText("Notifications Enabled");
+                notificationButton.setText("Disable Notifications");
             }
 
 
@@ -213,7 +214,7 @@ public class CourseInfo extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("course" + courseId, false);
                 editor.commit();
-                notificationButton.setText("Disable Notifications");
+                notificationButton.setText("Enable Notifications");
                 String title = courseTitle.getText().toString().trim();
                 String start = courseStart.getText().toString().trim();
                 String end = courseEnd.getText().toString().trim();
@@ -224,7 +225,7 @@ public class CourseInfo extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("course" + courseId, true);
                 editor.commit();
-                notificationButton.setText("Notifications Enabled");
+                notificationButton.setText("Disable Notifications");
                 String title = courseTitle.getText().toString().trim();
                 String start = courseStart.getText().toString().trim();
                 String end = courseEnd.getText().toString().trim();
@@ -271,6 +272,7 @@ public class CourseInfo extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) CourseInfo.this.getSystemService(CourseInfo.this.ALARM_SERVICE);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+
     }
 
     private void cancelNotification(int id, String title, String message, String datetime, int prefix) {

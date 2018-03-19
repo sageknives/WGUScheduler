@@ -15,6 +15,7 @@ import android.icu.util.Calendar;
 import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -106,7 +107,7 @@ public class AssessmentInfo extends AppCompatActivity {
 
             boolean isEnabled = isNotifying();
             if (isEnabled) {
-                notificationButton.setText("Notifications Enabled");
+                notificationButton.setText("Disable Notifications");
             }
 
         }
@@ -143,7 +144,7 @@ public class AssessmentInfo extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("assessment" + assessmentId, false);
                 editor.commit();
-                notificationButton.setText("Disable Notifications");
+                notificationButton.setText("Enable Notifications");
                 String title = assessmentTitle.getText().toString().trim();
                 String dueDate = assessmentDueDate.getText().toString().trim();
                 String message = "Cancel notification";
@@ -152,7 +153,7 @@ public class AssessmentInfo extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("assessment" + assessmentId, true);
                 editor.commit();
-                notificationButton.setText("Notifications Enabled");
+                notificationButton.setText("Disable Notifications");
                 String title = assessmentTitle.getText().toString().trim();
                 String dueDate = assessmentDueDate.getText().toString().trim();
                 String message = "Your assessment is due!";
@@ -164,8 +165,8 @@ public class AssessmentInfo extends AppCompatActivity {
     private void enableNotification(int id, String title, String message, String datetime) {
 
         Intent alarmIntent = new Intent(this, NotificationReceiver.class);
-        alarmIntent.putExtra("id",id);
-        alarmIntent.putExtra("type","assessment");
+        alarmIntent.putExtra("id", id);
+        alarmIntent.putExtra("type", "assessment");
         alarmIntent.putExtra("message", message);
         alarmIntent.putExtra("title", title);
         Long time = Long.parseLong("0");
@@ -196,12 +197,20 @@ public class AssessmentInfo extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) AssessmentInfo.this.getSystemService(AssessmentInfo.this.ALARM_SERVICE);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        if (Calendar.getInstance(TimeZone.getDefault()).getTime().getTime() > time) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notificationButton.setText("Enable Notifications");
+                }
+            }, 5000);
+        }
     }
 
     private void cancelNotification(int id, String title, String message, String datetime) {
         Intent alarmIntent = new Intent(this, NotificationReceiver.class);
-        alarmIntent.putExtra("id",id);
-        alarmIntent.putExtra("type","assessment");
+        alarmIntent.putExtra("id", id);
+        alarmIntent.putExtra("type", "assessment");
         alarmIntent.putExtra("message", message);
         alarmIntent.putExtra("title", title);
 
@@ -238,12 +247,17 @@ public class AssessmentInfo extends AppCompatActivity {
     }
 
     private void deleteAssessment() {
-        getContentResolver().delete(AssessmentsProvider.ASSESSMENTS_CONTENT_URI,
-                assessmentFilter, null);
-        Toast.makeText(this, getString(R.string.assessment_delete_snack),
-                Toast.LENGTH_SHORT).show();
-        setResult(RESULT_OK);
-        finish();
+        if (assessmentId == -1) {
+            setResult(RESULT_CANCELED);
+            finish();
+        } else {
+            getContentResolver().delete(AssessmentsProvider.ASSESSMENTS_CONTENT_URI,
+                    assessmentFilter, null);
+            Toast.makeText(this, getString(R.string.assessment_delete_snack),
+                    Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK);
+            finish();
+        }
 
 
     }
